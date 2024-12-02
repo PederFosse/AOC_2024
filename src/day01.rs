@@ -25,7 +25,7 @@ fn calculate_similarity_score(vec1: Vec<u32>, vec2: Vec<u32>) -> u32 {
 }
 
 pub fn main() {
-    let contents = read_to_string("src/data/day01/dummy.txt").expect("Unreadable file");
+    let contents = read_to_string("src/data/day01/input.txt").expect("Unreadable file");
     let lines = contents.split("\n");
 
     let mut vec1: Vec<u32> = Vec::new();
@@ -49,7 +49,7 @@ pub fn main() {
     let similarity_score = calculate_similarity_score(vec1, vec2);
 
     println!(
-        "Total distance: {}\nSimilarity score: {}",
+        "Total distance: {}, Similarity score: {}",
         sum, similarity_score
     )
 }
