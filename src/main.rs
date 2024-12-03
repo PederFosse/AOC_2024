@@ -2,9 +2,10 @@ use std::time::Instant;
 
 mod day01;
 mod day02;
+mod day03;
 
 fn main() {
-    let days = [day01::main, day02::main];
+    let days = [day01::main, day02::main, day03::main];
 
     let now = Instant::now();
 
