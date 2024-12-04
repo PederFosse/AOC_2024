@@ -1,4 +1,4 @@
-use std::{char::MAX, fs::read_to_string};
+use std::fs::read_to_string;
 
 const MAX_STEP_SIZE: u32 = 3;
 
