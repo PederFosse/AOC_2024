@@ -23,16 +23,15 @@ fn solve(
     target: u64,
     operations: &Vec<fn(a: u64, b: u64) -> u64>,
 ) -> Option<u64> {
-    if acc == target {
-        return Some(acc);
-    }
-
     // Exit early if target is passed, as we never subtract
     if acc > target {
         return None;
     }
 
     if index == values.len() {
+        if acc == target {
+            return Some(acc);
+        }
         return None;
     }
 
