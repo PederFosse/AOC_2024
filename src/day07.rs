@@ -12,39 +12,36 @@ fn multiply(a: u64, b: u64) -> u64 {
     a * b
 }
 
+fn concat(a: u64, b: u64) -> u64 {
+    format!("{}{}", a, b).parse().unwrap()
+}
+
 fn solve(
     values: &Vec<u64>,
     index: usize,
     acc: u64,
     target: u64,
-    operation: fn(a: u64, b: u64) -> u64,
+    operations: &Vec<fn(a: u64, b: u64) -> u64>,
 ) -> Option<u64> {
-    /* println!(
-        "Solving for values: {:?} with index {}, acc: {}, target: {}, operation: {}",
-        values, index, acc, target, op_name
-    ); */
     if acc == target {
         return Some(acc);
+    }
+
+    // Exit early if target is passed, as we never subtract
+    if acc > target {
+        return None;
     }
 
     if index == values.len() {
         return None;
     }
 
-    let new_acc = operation(acc, values[index]);
-
-    if new_acc > target {
-        return None;
-    }
-
-    let add_result = solve(values, index + 1, new_acc, target, add);
-    if add_result.is_some() {
-        return add_result;
-    }
-
-    let multiply_result = solve(values, index + 1, new_acc, target, multiply);
-    if multiply_result.is_some() {
-        return multiply_result;
+    for op in operations {
+        let new_acc = op(acc, values[index]);
+        let result = solve(values, index + 1, new_acc, target, operations);
+        if result.is_some() {
+            return result;
+        }
     }
 
     None
@@ -52,7 +49,8 @@ fn solve(
 
 pub fn main() {
     let puzzle_input = read_to_string("src/data/day07/input.txt").expect("Failed to open file");
-    let mut total_acc = 0;
+    let mut acc_part1 = 0;
+    let mut acc_part2 = 0;
     puzzle_input.trim().split("\n").for_each(|line| {
         let mut split_line = line.split(": ");
 
@@ -66,29 +64,32 @@ pub fn main() {
                 .collect(),
         };
 
-        let result1 = solve(
+        let result_part1 = solve(
             &equation.values,
             1,
             equation.values[0],
             equation.target,
-            multiply,
-        );
-        let result2 = solve(
-            &equation.values,
-            1,
-            equation.values[0],
-            equation.target,
-            add,
+            &vec![add, multiply],
         );
 
-        match result1 {
-            Some(value) => total_acc += value,
-            _ => match result2 {
-                Some(value) => total_acc += value,
-                _ => (),
-            },
+        match result_part1 {
+            Some(value) => acc_part1 += value,
+            _ => (),
+        }
+
+        let result_part2 = solve(
+            &equation.values,
+            1,
+            equation.values[0],
+            equation.target,
+            &vec![add, multiply, concat],
+        );
+
+        match result_part2 {
+            Some(value) => acc_part2 += value,
+            _ => (),
         }
     });
 
-    println!("Part 1: {}", total_acc)
+    println!("Part 1: {}, Part 2: {}", acc_part1, acc_part2)
 }
