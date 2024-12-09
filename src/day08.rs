@@ -26,6 +26,7 @@ pub fn main() {
     }
 
     let mut antinodes: HashSet<(isize, isize)> = HashSet::new();
+    let mut antinodes_part_2: HashSet<(isize, isize)> = HashSet::new();
 
     let row_count = antenna_matrix.len() as isize;
     let col_count = antenna_matrix[0].len() as isize;
@@ -35,27 +36,53 @@ pub fn main() {
             for i in (i + 1)..antennas.len() {
                 let (row2, col2) = antennas[i];
 
-                let antinode1 = (row - (row2 - row), col - (col2 - col));
-                let antinode2 = (row2 + (row2 - row), col2 + (col2 - col));
+                let steps_x = row2 - row;
+                let steps_y = col2 - col;
 
-                if antinode1.0 >= 0
-                    && antinode1.0 < row_count
-                    && antinode1.1 >= 0
-                    && antinode1.1 < col_count
-                {
-                    antinodes.insert(antinode1);
+                // Step one way
+                'one_way: {
+                    let mut node: (isize, isize) = (row, col);
+                    let mut part_1_added = false;
+                    loop {
+                        antinodes_part_2.insert(node);
+
+                        node = (node.0 - steps_x, node.1 - steps_y);
+                        if node.0 < 0 || node.0 >= row_count || node.1 < 0 || node.1 >= col_count {
+                            break 'one_way;
+                        }
+
+                        if part_1_added == false {
+                            antinodes.insert(node);
+                            part_1_added = true;
+                        }
+                    }
                 }
 
-                if antinode2.0 >= 0
-                    && antinode2.0 < row_count
-                    && antinode2.1 >= 0
-                    && antinode2.1 < col_count
-                {
-                    antinodes.insert(antinode2);
+                // Step the other way
+                'other_way: {
+                    let mut node: (isize, isize) = (row2, col2); // ! row2 and col2
+                    let mut part_1_added = false;
+                    loop {
+                        antinodes_part_2.insert(node);
+
+                        node = (node.0 + steps_x, node.1 + steps_y);
+                        if node.0 < 0 || node.0 >= row_count || node.1 < 0 || node.1 >= col_count {
+                            break 'other_way;
+                        }
+
+                        if part_1_added == false {
+                            antinodes.insert(node);
+                            part_1_added = true;
+                        }
+                    }
                 }
             }
         }
     }
 
-    println!("Part 1: {}", antinodes.len());
+    println!(
+        "Part 1: {}, Part 2: {}",
+        antinodes.len(),
+        antinodes_part_2.len()
+    );
 }
