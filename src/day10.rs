@@ -28,13 +28,14 @@ impl Matrix {
 
     fn get_total_trail_score(&self) -> (usize, usize) {
         let mut score_part_2 = 0;
-        let mut unique_trail_ends = HashSet::new();
+        let mut score_part_1 = 0;
         for row in 0..self.max_row {
             for col in 0..self.max_col {
                 let val = self.matrix[row as usize][col as usize]
                     .parse::<i64>()
                     .unwrap();
                 if val == 0 {
+                    let mut unique_trail_ends = HashSet::new();
                     let Some(trail_ends) = trail_score(self, (row as isize, col as isize), val)
                     else {
                         continue;
@@ -43,10 +44,12 @@ impl Matrix {
                     for node in trail_ends {
                         unique_trail_ends.insert(node);
                     }
+                    score_part_1 += unique_trail_ends.len();
                 }
             }
         }
-        (unique_trail_ends.len(), score_part_2)
+
+        (score_part_1, score_part_2)
     }
 }
 
