@@ -34,18 +34,18 @@ impl Matrix {
                 let val = self.matrix[row as usize][col as usize]
                     .parse::<i64>()
                     .unwrap();
-                if val == 0 {
-                    let mut unique_trail_ends = HashSet::new();
-                    let Some(trail_ends) = trail_score(self, (row as isize, col as isize), val)
-                    else {
-                        continue;
-                    };
-                    score_part_2 += trail_ends.len();
-                    for node in trail_ends {
-                        unique_trail_ends.insert(node);
-                    }
-                    score_part_1 += unique_trail_ends.len();
+                if val != 0 {
+                    continue;
                 }
+
+                let Some(trail_ends) = trail_score(self, (row as isize, col as isize), val) else {
+                    continue;
+                };
+                score_part_2 += trail_ends.len();
+                score_part_1 += trail_ends
+                    .into_iter()
+                    .collect::<HashSet<(isize, isize)>>()
+                    .len();
             }
         }
 
