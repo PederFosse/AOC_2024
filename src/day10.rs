@@ -77,11 +77,11 @@ fn trail_score(
             continue;
         };
 
-        let Some(trail_score) = trail_score(matrix, node, next_val) else {
+        let Some(score) = trail_score(matrix, node, next_val) else {
             continue;
         };
 
-        trail_score.iter().for_each(|&el| {
+        score.iter().for_each(|&el| {
             trail_ends.push(el);
         });
     }
