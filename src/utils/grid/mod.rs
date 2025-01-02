@@ -27,6 +27,14 @@ impl<T> Grid<T> {
             width: self.width,
         }
     }
+
+    pub fn update(&mut self, pos: (usize, usize), value: T) {
+        self.vec[self.width * pos.0 + pos.1] = value
+    }
+
+    fn is_within_grid(&self, point: Point) -> bool {
+        point.x < self.width && point.y < self.height
+    }
 }
 
 impl Grid<bool> {
@@ -34,6 +42,10 @@ impl Grid<bool> {
         let Some(next_point) = point.get_point_in_direction(direction) else {
             return None;
         };
+
+        if !self.is_within_grid(next_point) {
+            return None;
+        }
 
         match self[&next_point] {
             true => Some(next_point),
