@@ -15,6 +15,9 @@ const BYTES: usize = 12;
 */
 
 const GRID_HEIGHT: usize = 71;
+
+// For part two I just did a manual binary search to see when the dijkstra result
+// equals 'None' by updating this BYTES value until I reached 3001
 const BYTES: usize = 1024;
 
 #[derive(PartialEq, Eq)]
@@ -98,8 +101,6 @@ pub fn main() {
 
     println!(
         "Part 1: {:?}",
-        costs
-            .get(&Point::new(GRID_HEIGHT - 1, GRID_HEIGHT - 1))
-            .unwrap()
+        costs.get(&Point::new(GRID_HEIGHT - 1, GRID_HEIGHT - 1))
     )
 }
